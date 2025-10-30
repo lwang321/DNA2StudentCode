@@ -1,4 +1,3 @@
-
 /**
  * DNA
  * <p>
@@ -7,7 +6,7 @@
  * at Menlo School in Atherton, CA
  *</p>
  * <p>
- * Completed by: [YOUR NAME HERE]
+ * Completed by: Lucas Wang
  *</p>
  */
 
@@ -27,29 +26,27 @@ public class DNA {
 
     public static int basetoIndex(int base) {
         return switch (base) {
-            case 'C' -> 3;
-            case 'T' -> 2;
-            case 'G' -> 1;
-            case 'A' -> 0;
-            case 'c' -> 3;
-            case 't' -> 2;
-            case 'g' -> 1;
-            case 'a' -> 0;
+            case 'C', 'c' -> 3;
+            case 'T', 't' -> 2;
+            case 'G', 'g' -> 1;
+            case 'A', 'a' -> 0;
             default -> -1;
         };
     }
 
-    public static long hashString(String str) {
+    public static long hashString(String sequence, int index, int STRLen) {
         long hash = 0;
-        for (int i = 0; i < str.length(); i++) {
-            hash += (basetoIndex(str.charAt(i)) * exp(Radix, str.length() - i - 1));
+        for (int i = index; i < STRLen + index; i++) {
+            hash += (basetoIndex(sequence.charAt(i)) * exp(Radix, STRLen + index - i - 1));
         }
         return hash;
     }
     public static int STRCount(String sequence, String STR) {
+
         int STRLen = STR.length();
+        final long Radixexp = exp(Radix, STRLen - 1);
         // generate hash for STR
-        long STRHash = hashString(STR);
+        long STRHash = hashString(STR, 0, STRLen);
         long SeqHash = 0;
 
         int MaxCount = 0;
@@ -61,12 +58,12 @@ public class DNA {
 
         for (int i = 0; i < sequence.length();) {
 //            System.out.println(SeqHash);
-//            System.out.println(sequence.substring(max(i - STRLen, 0), min(i,sequence.length())));
+
             // if hash matches
 
             if (STRHash == SeqHash) {
                 i += STRLen;
-                SeqHash = hashString(sequence.substring(i - STRLen, i));
+                SeqHash = hashString(sequence, i - STRLen,  STRLen);
 
                 if (!matched) {
                     Count = 1;
@@ -75,30 +72,25 @@ public class DNA {
                     Count++;
                 }
 
-//                System.out.println("Count = " + Count);
                 matched = true;
             }
 
             // not found
             else {
                 if (matched) {
-//                    System.out.println("back to matching");
                     matched = false;
-                    i -=  STRLen;
-//                    System.out.println(sequence.substring(i - STRLen, i));
-                    SeqHash = hashString(sequence.substring(i-STRLen, i));
+                    i -= STRLen;
+                    SeqHash = hashString(sequence, i-STRLen, STRLen);
+//                    System.out.println(SeqHash + '\n');
 
                 }
-                if (i-STRLen > 0) {
-                    SeqHash -= (basetoIndex(sequence.charAt(i - STRLen)) * exp(Radix, STRLen - 1));
+                if (i-STRLen >= 0) {
+                    SeqHash -= (basetoIndex(sequence.charAt(i - STRLen)) * Radixexp);
                 }
 
-//            System.out.println(SeqHash);
                 SeqHash *= Radix;
-//            System.out.println(SeqHash);
+
                 SeqHash += basetoIndex(sequence.charAt(i));
-
-
             }
 
             if (!matched) {
