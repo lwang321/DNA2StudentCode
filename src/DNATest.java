@@ -27,33 +27,39 @@ public class DNATest {
     private String STR;
 
     @Test
-    @Timeout(value = 100, unit = TimeUnit.MILLISECONDS)
+    @Timeout(value = 80, unit = TimeUnit.MILLISECONDS)
     public void testBasic() {
         setTestData(0);
     }
 
     @Test
-    @Timeout(value = 100, unit = TimeUnit.MILLISECONDS)
+    @Timeout(value = 30, unit = TimeUnit.MILLISECONDS)
     public void testMore() {
         setTestData(5);
     }
 
     @Test
-    @Timeout(value = 100, unit = TimeUnit.MILLISECONDS)
+    @Timeout(value = 40, unit = TimeUnit.MILLISECONDS)
     public void testEvenMore() {
         setTestData(19);
+    }
+
+    @Test
+    @Timeout(value = 100, unit = TimeUnit.MILLISECONDS)
+    public void testTricky() {
+        setTestData(1);
     }
 
     @Test
     @Timeout(value = 20000, unit = TimeUnit.MILLISECONDS)
     public void testLargest() {
         int maxSize = 100000000;
-        char STR = 'a';
+        char STR = 'A';
         try {
             char[] largeCharArray = new char[maxSize];
             Arrays.fill(largeCharArray, STR);
             String largeString = new String(largeCharArray);
-            assertEquals(maxSize / 10, studentSolution.STRCount(largeString, "aaaaaaaaaa"),
+            assertEquals(maxSize / 10, studentSolution.STRCount(largeString, "AAAAAAAAAA"),
                     "Test Largest failed: should return " + maxSize / 10);
         } catch (OutOfMemoryError e) {
             System.err.println("Ran out of memory trying to create a large string");
@@ -75,9 +81,9 @@ public class DNATest {
                     sequenceArr[index++] = Character.toUpperCase(line.charAt(i));
                 }
             }
-            int expected = 13;
+            int expected = 9;
             String sequence = new String(sequenceArr);
-            assertEquals(expected, studentSolution.STRCount(sequence, "CAG"),
+            assertEquals(expected, studentSolution.STRCount(sequence, "AAAAC"),
                     "Test Largest failed: should return " + expected);
         } catch (IOException e) {
             System.err.println("Ran out of memory trying to create a large string");
